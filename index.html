@@ -1,0 +1,185 @@
+<html>
+	<head>
+		<title>Wild Driver - Alpha 1.20</title>
+		<link type="text/css" href="css/space-madness.css" rel="stylesheet" />
+		<link type="text/css" href="css/ui-darkness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />
+		<script type="application/javascript" src="js/jquery-1.5.1.min.js"></script>
+		<script type="application/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+		<script type="application/javascript" src="js/jquery.spritely-0.5.js"></script>
+		<script type="application/javascript" src="js/car-bot.js"></script>
+		<script type="application/javascript" src="js/car.js"></script>
+		<script type="application/javascript" src="js/circuit.js"></script>
+		<script type="application/javascript" src="js/game.js"></script>
+		<script type="application/javascript" src="js/border.js"></script>
+		<script type="application/javascript">
+			function addPoints(angle, vel) {
+
+				updatePointsBoard(angle, vel);
+			}
+
+			var addPointer = addPoints;
+			var gameInstance = new game(addPointer);
+			var gameRunning = false;
+			var gamePaused = false;
+			var points = 0;
+			imageBuffer = new Array();
+			context = {
+				width : 708,
+				height : 570
+			};
+			var percentage = 5;
+			soundBuffer = new Array();
+
+			/*
+			 * For preloading images on cache
+			 */
+			function preloader() {
+
+				$("#progress-bar").progressbar({
+					value : percentage
+				});
+
+				// set image list
+				var images = new Array();
+				images['car'] = "images/cars.png";
+				images['fireball'] = "images/fireball.png";
+				images['wheel'] = "images/wheel.png";
+
+
+				var imageslength = 4;
+				var count = 1;
+				// start preloading
+				for(var key in images) {
+					var imgObj = new Image();
+					imgObj.src = images[key];
+					imageBuffer[key] = imgObj;
+					var imageBufferLength = imageBuffer.length;
+					percentage = ((count * 100 ) / imageslength);
+					$('#progress-bar').progressbar({
+						value : percentage
+					});
+					count++;
+				}
+
+				$("#loading-layer").hide();
+
+			}
+
+
+			$(document).ready(function() {
+				$("button").button();
+			});
+			function updatePointsBoard(points, vel) {
+				$("#points").text(points);
+				$("#vel").text(vel);
+			}
+
+
+			$(document).keydown(function(e) {
+				if(gameRunning) {
+					gameInstance.notify(e.keyCode, 'keydown');
+				}
+			});
+
+			$(document).keyup(function(e) {
+				if(gameRunning) {
+					gameInstance.notify(e.keyCode, 'keyup');
+				}
+			});
+			function startGame() {
+				if(!gameRunning) {
+					gameRunning = true;
+					gameInstance.init();
+
+				} else {
+					gameInstance.startLoop();
+				}
+			}
+
+			function pauseGame() {
+				gameInstance.stop();
+			}
+
+			function gameOver() {
+				$("#pointsToUser").html(points);
+				$("#game-over").dialog({
+					modal : true,
+					title : 'Game over',
+					buttons : {
+						"Ok" : function() {
+							rankUser();
+						}
+					}
+				});
+			}
+
+			
+		</script>
+	</head>
+	<body style="background-color: white; text-align:center;font-family:arial;" onload="preloader()">
+		<div style="width: 1015px; height: 570;margin-left: auto; margin-right: auto;">
+			<!-- left side panel -->
+			<div class="panel-left">
+				<button onclick="window.location = '../../index.html'" style="width: 100%;">
+					Home
+				</button>
+				<button onclick="window.location = 'ranking.php'" style="width: 100%;">
+					Ranking
+				</button>
+				<br/>
+				<div class="commands">
+					<div style="font-weight: bold;">
+						Key Commands
+					</div>
+					<div>
+						<a style="float: left;">Movements</a><a style="float: right;">arrows</a>
+					</div>
+					<div>
+						<a style="float: left;">Weapon fire</a><a style="float: right;">F</a>
+					</div>
+				</div>
+			</div>
+			<!-- center side panel -->
+			<div style="float: left; margin-left: auto; margin-right: auto; width: 708px; height: 570; position: relative; left: 0;">
+				<div class="header-layer">
+					Wild Driver
+				</div>
+				<div id="container"></div>
+				<canvas id="canvas-layer" width="708" height="570px"></canvas>
+				<div id="loading-layer">
+					<span style="position: absolute; top: 250px; color: white; width: 708; left: 0;">Loading...</span>
+					<div id="progress-bar" style="left: 100; top: 300; position: absolute; width: 70%; z-index: 8;"></div>
+				</div>
+			</div>
+			<!-- right side panel -->
+			<div id="right-side-panel" style="float: left; width: 150px; height: 570;">
+				<button onclick="startGame();return false;" style="width: 100%;">
+					Start
+				</button>
+				<button onclick="pauseGame();return false;" style="width: 100%;">
+					Pause
+				</button>
+				<button id="restartBtn" onclick="window.location = 'index.html'" style="width: 100%;">
+					Refresh
+				</button>
+				<span>Angle:&nbsp;&nbsp;</span><span id="points">0</span>
+				<span>Speed:&nbsp;</span><span id="vel">0</span>
+			</div>
+		</div>
+		<br/>
+		<div id="game-over" style="display:none;">
+			You've been killed by an asteroid!
+			<div id="pointsToUser">
+				Your score:
+			</div>
+			<div>
+				<label>Enter your name:</label>
+				<input id="username" type="text" maxlength="10" size="15" value=""/>
+			</div>
+		</div>
+		<div id="showRanking" style="display:none;"></div>
+		<div style="width: 100%;color: white;">
+			By Juan Manuel Ag�ero - 2011
+		</div>
+	</body>
+</html>
