@@ -7,6 +7,8 @@ function circuit(){
 	this.frictionCoeficient = 0.05;
 	this.borders = [];
 	
+	this.intersectable = false;
+	
 	this.build();
 	
 }

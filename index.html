@@ -9,95 +9,90 @@
 		<script type="application/javascript" src="js/car-bot.js"></script>
 		<script type="application/javascript" src="js/car.js"></script>
 		<script type="application/javascript" src="js/circuit.js"></script>
+		<script type="application/javascript" src="js/event.js"></script>
 		<script type="application/javascript" src="js/game.js"></script>
 		<script type="application/javascript" src="js/border.js"></script>
 		<script type="application/javascript">
-			function addPoints(angle, vel) {
+		
+			// keyconfs
+			var keyConf1 = {
+				up : 'arrow-up',
+				down : 'arrow-down',
+				left : 'arrow-left',
+				right : 'arrow-right'
+			};
 
+			var botConf = {
+				posX : 500,
+				posY : 200,
+				vel : 1
+			};
+		
+		
+			function addPoints(angle, vel) {
 				updatePointsBoard(angle, vel);
 			}
 
 			var addPointer = addPoints;
-			var gameInstance = new game(addPointer);
+			
+			var motionEngine = new game(addPointer);
 			var gameRunning = false;
 			var gamePaused = false;
 			var points = 0;
-			imageBuffer = new Array();
-			context = {
-				width : 708,
-				height : 570
-			};
-			var percentage = 5;
-			soundBuffer = new Array();
+			
+			//***************************************
+			// Agrego objectos al motor de movimiento
+			motionEngine.addObject(new car(1, 450, 200, addPointer, keyConf1, motionEngine));
+			motionEngine.addObject(new carBot(2, botConf, addPointer, motionEngine));
 
-			/*
-			 * For preloading images on cache
-			 */
-			function preloader() {
+			var circuit = new circuit();
+			motionEngine.addObject(circuit);
 
-				$("#progress-bar").progressbar({
-					value : percentage
-				});
-
-				// set image list
-				var images = new Array();
-				images['car'] = "images/cars.png";
-				images['fireball'] = "images/fireball.png";
-				images['wheel'] = "images/wheel.png";
-
-
-				var imageslength = 4;
-				var count = 1;
-				// start preloading
-				for(var key in images) {
-					var imgObj = new Image();
-					imgObj.src = images[key];
-					imageBuffer[key] = imgObj;
-					var imageBufferLength = imageBuffer.length;
-					percentage = ((count * 100 ) / imageslength);
-					$('#progress-bar').progressbar({
-						value : percentage
-					});
-					count++;
-				}
-
-				$("#loading-layer").hide();
-
+			for(var i = 0; i < circuit.borders.length; i++) {
+				motionEngine.addObject(circuit.borders[i]);
 			}
-
+			//****************************************
+			
 
 			$(document).ready(function() {
 				$("button").button();
 			});
+			
 			function updatePointsBoard(points, vel) {
 				$("#points").text(points);
 				$("#vel").text(vel);
 			}
 
+			
 
+			/** captura de eventos del teclado **/
 			$(document).keydown(function(e) {
 				if(gameRunning) {
-					gameInstance.notify(e.keyCode, 'keydown');
+					var mkey = motionEngine.getMapped(e.keyCode);
+					motionEngine.pushEvent(new event('keyboard', { "keycode": mkey } ));
 				}
 			});
-
 			$(document).keyup(function(e) {
 				if(gameRunning) {
-					gameInstance.notify(e.keyCode, 'keyup');
+					var mkey = motionEngine.getMapped(e.keyCode);
+					motionEngine.pushEvent(new event('keyboard', { "keyup": mkey } ));
 				}
 			});
+			
+			
+			
 			function startGame() {
 				if(!gameRunning) {
 					gameRunning = true;
-					gameInstance.init();
+					motionEngine.init();
 
 				} else {
-					gameInstance.startLoop();
+					motionEngine.startLoop();
 				}
 			}
 
 			function pauseGame() {
-				gameInstance.stop();
+				motionEngine.stop();
 			}
 
 			function gameOver() {
@@ -116,7 +111,7 @@
 			
 		</script>
 	</head>
-	<body style="background-color: white; text-align:center;font-family:arial;" onload="preloader()">
+	<body style="background-color: white; text-align:center;font-family:arial;" >
 		<div style="width: 1015px; height: 570;margin-left: auto; margin-right: auto;">
 			<!-- left side panel -->
 			<div class="panel-left">
@@ -146,10 +141,6 @@
 				</div>
 				<div id="container"></div>
 				<canvas id="canvas-layer" width="708" height="570px"></canvas>
-				<div id="loading-layer">
-					<span style="position: absolute; top: 250px; color: white; width: 708; left: 0;">Loading...</span>
-					<div id="progress-bar" style="left: 100; top: 300; position: absolute; width: 70%; z-index: 8;"></div>
-				</div>
 			</div>
 			<!-- right side panel -->
 			<div id="right-side-panel" style="float: left; width: 150px; height: 570;">

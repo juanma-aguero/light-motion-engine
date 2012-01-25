@@ -7,7 +7,10 @@
 * n - default
 *
 */
-function carBot(initParams, addPointer){
+function carBot(id, initParams, addPointer, motionEngine){
+
+	// Object
+	this.id = id;
 
 	// Physics
 	this.initParams = initParams;
@@ -17,12 +20,16 @@ function carBot(initParams, addPointer){
 	this.width=30;
 	this.height=30;
 	this.mass=1000;
+	
+	// Motion engine
+	this.motionEngine = motionEngine;
 
 	// Movement
 	this.activeMovement="forward";
 	this.activeAngle = 90;
 	this.lastAngle = 90;
 	this.counter = 0;
+	this.intersectable = true;
 	
 	// Renderization
 	this.spriteX = (5*this.width);
@@ -34,8 +41,6 @@ function carBot(initParams, addPointer){
 	this.state = 0;
 	this.circuit = undefined;
 	
-	this.context = undefined;
-	
 	this.showAngle = addPointer;
 	
 }
@@ -45,82 +50,81 @@ function carBot(initParams, addPointer){
 /*
  * Update carBot state
  */
-carBot.prototype.update=function(ctx){
+carBot.prototype.update=function(){
 	
-	this.context = ctx;
-	var crashSide = this.thereIsACrash();
-	if(crashSide > 0 ){
-		switch(crashSide){
-			case 1:
-				if( this.activeAngle > 90 && this.activeAngle < 180  ){
-					this.activeAngle = this.activeAngle - 90;
-				}else{
-					if( this.activeAngle > 180 && this.activeAngle < 270  )	this.activeAngle=(270+(270-this.activeAngle));
-					if(this.activeAngle==180) this.activeAngle = 0;
-				}
-				break;
-			case 2:
-				if( this.activeAngle > 270 && this.activeAngle < 360 ){
-					this.activeAngle = 0+(360 - this.activeAngle);
-				}else{
-					if( this.activeAngle > 180 && this.activeAngle < 270  )	this.activeAngle = (90+(this.activeAngle-180));
-					if( this.activeAngle == 270)this.activeAngle = 90;
-				}
-				break;
-			case 3:
-				if( this.activeAngle > 270 && this.activeAngle < 360 ){
-					this.activeAngle = 180+(360-this.activeAngle);
-				}else{
-					if( this.activeAngle > 0 && this.activeAngle < 90  )this.activeAngle = (90+(90-this.activeAngle));
-					if( this.activeAngle == 0)this.activeAngle = 180;
-				}
-				break;
-			case 4:
-				if( this.activeAngle > 0 && this.activeAngle < 90  )	{
-					this.activeAngle = (270+(90-this.activeAngle));
-				}else{
-					if( this.activeAngle > 90 && this.activeAngle < 180  )this.activeAngle = (180+(180-this.activeAngle));
-					if( this.activeAngle == 90)this.activeAngle = 270;
-				}
-				break;
-		}
-		this.lastAngle = this.activeAngle;
+	// var crashSide = this.thereIsACrash();
+	// if(crashSide > 0 ){
+		// switch(crashSide){
+			// case 1:
+				// if( this.activeAngle > 90 && this.activeAngle < 180  ){
+					// this.activeAngle = this.activeAngle - 90;
+				// }else{
+					// if( this.activeAngle > 180 && this.activeAngle < 270  )	this.activeAngle=(270+(270-this.activeAngle));
+					// if(this.activeAngle==180) this.activeAngle = 0;
+				// }
+				// break;
+			// case 2:
+				// if( this.activeAngle > 270 && this.activeAngle < 360 ){
+					// this.activeAngle = 0+(360 - this.activeAngle);
+				// }else{
+					// if( this.activeAngle > 180 && this.activeAngle < 270  )	this.activeAngle = (90+(this.activeAngle-180));
+					// if( this.activeAngle == 270)this.activeAngle = 90;
+				// }
+				// break;
+			// case 3:
+				// if( this.activeAngle > 270 && this.activeAngle < 360 ){
+					// this.activeAngle = 180+(360-this.activeAngle);
+				// }else{
+					// if( this.activeAngle > 0 && this.activeAngle < 90  )this.activeAngle = (90+(90-this.activeAngle));
+					// if( this.activeAngle == 0)this.activeAngle = 180;
+				// }
+				// break;
+			// case 4:
+				// if( this.activeAngle > 0 && this.activeAngle < 90  )	{
+					// this.activeAngle = (270+(90-this.activeAngle));
+				// }else{
+					// if( this.activeAngle > 90 && this.activeAngle < 180  )this.activeAngle = (180+(180-this.activeAngle));
+					// if( this.activeAngle == 90)this.activeAngle = 270;
+				// }
+				// break;
+		// }
+		// this.lastAngle = this.activeAngle;
 		
-	}else{
+	// }else{
 		
-		// Circuit control
-		if( this.posX > 1000 &&
-			this.posY < (this.initParams.posY-350) &&
-			this.activeAngle < 180
-			){
-			this.activeAngle += 18;
-		}
-		if( this.posX < 300 &&
-			this.posY < 500 &&
-			this.activeAngle < 270
-			){
-			this.activeAngle += 18;
-		}
-		if( this.posX < 400 &&
-			this.posY > 1000 &&
-			this.activeAngle >= 270
-			){
-			this.activeAngle+=18;
-			if(this.activeAngle == 360) this.activeAngle=0;
-		}
-		if( this.posX > 1000 &&
-			this.posY > 1000 &&
-			this.activeAngle < 90
-			){
-			this.activeAngle += 18;
-		}
+		// // Circuit control
+		// if( this.posX > 1000 &&
+			// this.posY < (this.initParams.posY-350) &&
+			// this.activeAngle < 180
+			// ){
+			// this.activeAngle += 18;
+		// }
+		// if( this.posX < 300 &&
+			// this.posY < 500 &&
+			// this.activeAngle < 270
+			// ){
+			// this.activeAngle += 18;
+		// }
+		// if( this.posX < 400 &&
+			// this.posY > 1000 &&
+			// this.activeAngle >= 270
+			// ){
+			// this.activeAngle+=18;
+			// if(this.activeAngle == 360) this.activeAngle=0;
+		// }
+		// if( this.posX > 1000 &&
+			// this.posY > 1000 &&
+			// this.activeAngle < 90
+			// ){
+			// this.activeAngle += 18;
+		// }
 
-		// speed control
-		if( this.vel < 2){
-			this.vel += 5;
-		}
+		// // speed control
+		// if( this.vel < 2){
+			// this.vel += 5;
+		// }
 		
-	}
+	// }
 	
 	switch( this.state ){
 		case 0: this.defaultMovement(); break;
@@ -134,20 +138,21 @@ carBot.prototype.update=function(ctx){
 /*****/
 carBot.prototype.defaultMovement = function(){
 	
-	var fc = this.circuit.frictionCoeficient;
+	// var fc = this.circuit.frictionCoeficient;
 	
-	if(this.vel > fc){
-		this.vel = this.vel-fc;
-	}else{
-		if(this.vel < -fc){
-			this.vel = this.vel+fc;
-		}else{
-			this.vel = 0;
-		}
-	}
+	// if(this.vel > fc){
+		// this.vel = this.vel-fc;
+	// }else{
+		// if(this.vel < -fc){
+			// this.vel = this.vel+fc;
+		// }else{
+			// this.vel = 0;
+		// }
+	// }
 	
 	var angleForCalc = undefined;
-	var slippingTime = (0.5/fc);
+	//var slippingTime = (0.5/fc);
+	var slippingTime = 2;
 	// movement
 	if(this.activeAngle != this.lastAngle){
 		if(this.counter < slippingTime){
@@ -169,16 +174,6 @@ carBot.prototype.defaultMovement = function(){
 	this.posY=this.posY+deltaPosY;
 	this.posX=this.posX+deltaPosX;
 	
-
-	// check boundaries
-	if( this.posY >= this.circuit.height){
-		alert("Max height reached: " + this.posY);
-		this.vel = 0;
-	}
-	if( this.posX >= this.circuit.width){
-		alert("Max width reached : " + this.posX);
-		this.vel = 0;
-	}
 }
 
 

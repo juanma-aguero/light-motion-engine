@@ -3,11 +3,13 @@ function border(x0, y0, type){
 	
 	this.type = type;
 
-	this.width=13;
-	this.height=13;
+	this.width=12;
+	this.height=12;
 	
-	this.posX=(x0*this.width);
-	this.posY=(y0*this.height);
+	this.posX=(x0*13);
+	this.posY=(y0*13);
+	
+	this.intersectable = true;
 
 	this.state = 0;
 
