@@ -10,7 +10,7 @@
 		<script type="application/javascript" src="js/car.js"></script>
 		<script type="application/javascript" src="js/circuit.js"></script>
 		<script type="application/javascript" src="js/event.js"></script>
-		<script type="application/javascript" src="js/game.js"></script>
+		<script type="application/javascript" src="js/motionEngine.js"></script>
 		<script type="application/javascript" src="js/border.js"></script>
 		<script type="application/javascript">
 		
@@ -35,9 +35,9 @@
 
 			var addPointer = addPoints;
 			
-			var motionEngine = new game(addPointer);
-			var gameRunning = false;
-			var gamePaused = false;
+			var motionEngine = new motionEngine(addPointer);
+			var motionEngineRunning = false;
+			var motionEnginePaused = false;
 			var points = 0;
 			
 			//***************************************
@@ -67,13 +67,13 @@
 
 			/** captura de eventos del teclado **/
 			$(document).keydown(function(e) {
-				if(gameRunning) {
+				if(motionEngineRunning) {
 					var mkey = motionEngine.getMapped(e.keyCode);
 					motionEngine.pushEvent(new event('keyboard', { "keycode": mkey } ));
 				}
 			});
 			$(document).keyup(function(e) {
-				if(gameRunning) {
+				if(motionEngineRunning) {
 					var mkey = motionEngine.getMapped(e.keyCode);
 					motionEngine.pushEvent(new event('keyboard', { "keyup": mkey } ));
 				}
@@ -82,8 +82,8 @@
 			
 			
 			function startGame() {
-				if(!gameRunning) {
-					gameRunning = true;
+				if(!motionEngineRunning) {
+					motionEngineRunning = true;
 					motionEngine.init();
 
 				} else {
@@ -95,7 +95,7 @@
 				motionEngine.stop();
 			}
 
-			function gameOver() {
+			function motionEngineOver() {
 				$("#pointsToUser").html(points);
 				$("#game-over").dialog({
 					modal : true,
