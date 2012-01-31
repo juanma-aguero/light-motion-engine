@@ -11,6 +11,7 @@ function car(id, iniX, iniY, addPointer, keyConf, motionEngine){
 
 	// Object
 	this.id = id;
+	this.color = "green";
 	
 	// Physics
 	this.vel = 0;
@@ -29,7 +30,10 @@ function car(id, iniX, iniY, addPointer, keyConf, motionEngine){
 	
 	// Movement
 	this.activeMovement="forward";
+	
 	this.activeAngle = 90;
+	
+	
 	this.lastAngle = 90;
 	this.counter = 0;
 	this.intersectable = true;
@@ -66,28 +70,15 @@ car.prototype.update=function(){
 		case 1: this.crashMovement(); break;
 	}
 	
-	this.updateTilesetPosition();
 	this.showAngle(this.activeAngle, this.vel);
 }
 
 
 /*****/
 car.prototype.defaultMovement = function(){
-	
-	// var fc = this.circuit.frictionCoeficient;
-	
-	// if(this.vel > fc){
-		// this.vel = this.vel-fc;
-	// }else{
-		// if(this.vel < -fc){
-			// this.vel = this.vel+fc;
-		// }else{
-			// this.vel = 0;
-		// }
-	// }
+
 	
 	var angleForCalc = undefined;
-	//var slippingTime = ((this.vel/60)/fc);
 	var slippingTime = 2;
 	
 	// movement
@@ -123,28 +114,6 @@ car.prototype.crashMovement = function(){
 }
 
 
-/******/
-car.prototype.thereIsACrash = function(){
-	var intersectionsCount = 0;
-	for (var i=0; i<this.circuit.borders.length; i++){
-		intersectionsCount = this.intersection(this, this.circuit.borders[i]);
-		if( intersectionsCount > 0){
-			break;
-		}
-	}
-	return intersectionsCount;
-}
-
-
-
-car.prototype.updateTilesetPosition = function(){
-    var pos = (this.activeAngle/18);
-    this.spriteX = (pos * this.width);
-    this.spriteY = 0;
-}
-
-
-
 
 /*
  * Filter event
@@ -161,22 +130,22 @@ car.prototype.processEvents=function(){
 					case this.keyConf.left:
 						  this.activeAngle+=18;
 						  if(this.activeAngle == 360) this.activeAngle=0;
-						  this.motionEngine.popEvent(event);
+						  event.isAlive = false;
 					  break;
 					case this.keyConf.up:
 					  this.activeMovement = "forward";
 					  if(this.vel < this.maxSpeed) this.vel+=0.5;
-					  this.motionEngine.popEvent(event);
+					  event.isAlive = false;
 					  break;
 					case this.keyConf.right:
 						  this.activeAngle-=18;
 						  if(this.activeAngle < 0) this.activeAngle = 342;
-						  this.motionEngine.popEvent(event);
+						  event.isAlive = false;
 					  break;
 					case this.keyConf.down:
 					  this.activeMovement = "backward";
 					  if(this.vel > -this.maxSpeed) this.vel-=0.5;
-					  this.motionEngine.popEvent(event);
+					  event.isAlive = false;
 					  break;
 				}
 				break;
@@ -187,43 +156,59 @@ car.prototype.processEvents=function(){
 	}
 }
 
-car.prototype.manageCrash=function(event){
-	if(crashSide > 0 ){
-		switch(crashSide){
+car.prototype.manageCrash = function(eventm) {
+
+	var crashSide = 0;
+
+	if(eventm.params.id == this.id) {
+		crashSide = eventm.params.type;
+		eventm.isAlive = false;
+	}
+
+	if(crashSide > 0) {
+		switch(crashSide) {
 			case 1:
-				if( this.activeAngle > 90 && this.activeAngle < 180  ){
+				if(this.activeAngle > 90 && this.activeAngle < 180) {
 					this.activeAngle = this.activeAngle - 90;
-				}else{
-					if( this.activeAngle > 180 && this.activeAngle < 270  )	this.activeAngle=(270+(270-this.activeAngle));
-					if(this.activeAngle==180) this.activeAngle = 0;
+				} else {
+					if(this.activeAngle > 180 && this.activeAngle < 270)
+						this.activeAngle = (270 + (270 - this.activeAngle));
+					if(this.activeAngle == 180)
+						this.activeAngle = 0;
 				}
 				break;
 			case 2:
-				if( this.activeAngle > 270 && this.activeAngle < 360 ){
-					this.activeAngle = 0+(360 - this.activeAngle);
-				}else{
-					if( this.activeAngle > 180 && this.activeAngle < 270  )	this.activeAngle = (90+(this.activeAngle-180));
-					if( this.activeAngle == 270)this.activeAngle = 90;
+				if(this.activeAngle > 270 && this.activeAngle < 360) {
+					this.activeAngle = 0 + (360 - this.activeAngle);
+				} else {
+					if(this.activeAngle > 180 && this.activeAngle < 270)
+						this.activeAngle = (90 + (this.activeAngle - 180));
+					if(this.activeAngle == 270)
+						this.activeAngle = 90;
 				}
 				break;
 			case 3:
-				if( this.activeAngle > 270 && this.activeAngle < 360 ){
-					this.activeAngle = 180+(360-this.activeAngle);
-				}else{
-					if( this.activeAngle > 0 && this.activeAngle < 90  )this.activeAngle = (90+(90-this.activeAngle));
-					if( this.activeAngle == 0)this.activeAngle = 180;
+				if(this.activeAngle > 270 && this.activeAngle < 360) {
+					this.activeAngle = 180 + (360 - this.activeAngle);
+				} else {
+					if(this.activeAngle > 0 && this.activeAngle < 90)
+						this.activeAngle = (90 + (90 - this.activeAngle));
+					if(this.activeAngle == 0)
+						this.activeAngle = 180;
 				}
 				break;
 			case 4:
-				if( this.activeAngle > 0 && this.activeAngle < 90  )	{
-					this.activeAngle = (270+(90-this.activeAngle));
-				}else{
-					if( this.activeAngle > 90 && this.activeAngle < 180  )this.activeAngle = (180+(180-this.activeAngle));
-					if( this.activeAngle == 90)this.activeAngle = 270;
+				if(this.activeAngle > 0 && this.activeAngle < 90) {
+					this.activeAngle = (270 + (90 - this.activeAngle));
+				} else {
+					if(this.activeAngle > 90 && this.activeAngle < 180)
+						this.activeAngle = (180 + (180 - this.activeAngle));
+					if(this.activeAngle == 90)
+						this.activeAngle = 270;
 				}
 				break;
 		}
 		this.lastAngle = this.activeAngle;
-		
-	}	
+
+	}
 }

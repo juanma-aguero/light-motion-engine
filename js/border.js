@@ -1,5 +1,9 @@
 /** Border*/
-function border(x0, y0, type){
+function border(id, x0, y0, type){
+	
+	this.color = "black";
+	
+	this.id = id;
 	
 	this.type = type;
 

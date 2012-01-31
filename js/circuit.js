@@ -1,5 +1,6 @@
 /** Rect*/
-function circuit(){
+function circuit(id){
+	this.id = id;
 	this.width=800;
 	this.height=800;
 	this.state = 0;
@@ -14,7 +15,7 @@ function circuit(){
 }
 
 circuit.prototype.build=function(){
-
+/*
 	////// BORDER - INTERNAL
 	//left
 	for(var i=12; i<=32; i++){
@@ -32,23 +33,24 @@ circuit.prototype.build=function(){
 	for(var i=13; i<=31; i++){
 		this.borders.push(new border( 12, i, 'internal'));
 	}
+	*/
 	
 	////// BORDER - EXTERNAL
 	//left
 	for(var i=2; i<=42; i++){
-		this.borders.push(new border( i, 2, 'external'));
+		this.borders.push(new border( "border"+i+2, i, 2, 'external'));
 	}
 	//right
 	for(var i=2; i<=42; i++){
-		this.borders.push(new border( i, 42, 'external'));
+		this.borders.push(new border( "border"+i+42, i, 42, 'external'));
 	}
 	//bottom
 	for(var i=3; i<=41; i++){
-		this.borders.push(new border( 43, i, 'external'));
+		this.borders.push(new border( "border"+43+i, 43, i, 'external'));
 	}
 	//top
 	for(var i=3; i<=41; i++){
-		this.borders.push(new border( 2, i, 'external'));
+		this.borders.push(new border( "border"+2+i, 2, i, 'external'));
 	}
 	
 }

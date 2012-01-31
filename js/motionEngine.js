@@ -21,19 +21,19 @@ function motionEngine(addPointer) {
 motionEngine.prototype.addObject = function(object) {
 	this.objects.push(object);
 }
-
-
 /*
  * Draw objects on canvas
  */
 motionEngine.prototype.drawObject = function(object) {
+	this.ctx.fillStyle = object.color;
 	this.ctx.fillRect(object.posX, object.posY, object.width, object.height)
 }
 /*
  * Delete objects on canvas
  */
-motionEngine.prototype.deleteObject = function(object) {
-	this.ctx.clearRect(object.posX, object.posY, object.width, object.height);
+motionEngine.prototype.clearScreen = function(object) {
+	//this.ctx.clearRect(object.posX, object.posY, object.width, object.height);
+	this.ctx.clearRect(0, 0, 600, 600);
 }
 /*
  * Init motionEngine functionalitys
@@ -55,9 +55,7 @@ motionEngine.prototype.startLoop = function() {
 
 	function loop() {
 		// delete old objects
-		for(var i = 0; i < motionEngineInstance.objects.length; i++) {
-			motionEngineInstance.deleteObject(motionEngineInstance.objects[i]);
-		}
+		motionEngineInstance.clearScreen();
 
 		// update states
 		motionEngineInstance.update();
@@ -68,43 +66,47 @@ motionEngine.prototype.startLoop = function() {
 		}
 	}
 
+
 	this.stop();
 	this.intLoop = setInterval(loop, 30);
 }
-
 /*
  * Stop motionEngine
  */
 motionEngine.prototype.stop = function() {
 	clearInterval(this.intLoop);
 }
-
-
 /*
  * Update all components
  */
 motionEngine.prototype.update = function() {
+	
+	this.clearQueue();
 
 	for(var i = 0; i < this.objects.length; i++) {
-		
+
 		var actual = this.objects[i];
-		
-		for(var j = 0; j < this.objects.length; j++){
-			if( i != j && this.objects[j].intersectable ){
+
+		for(var j = 0; j < this.objects.length; j++) {
+			if(i != j && this.objects[j].intersectable) {
 				var comparado = this.objects[j];
 				var thereIsACrash = this.intersection(actual, comparado);
-				if( thereIsACrash > 0 ){
-					this.pushEvent(new event("crash", {"id": this.objects[i].id ,"type": thereIsACrash} ));
-					this.pushEvent(new event("crash", {"id": this.objects[j].id, "type": thereIsACrash} ));
+				if(thereIsACrash > 0) {
+					this.pushEvent(new event("crash", {
+						"id" : this.objects[i].id,
+						"type" : thereIsACrash
+					}));
+					this.pushEvent(new event("crash", {
+						"id" : this.objects[j].id,
+						"type" : thereIsACrash
+					}));
 				}
 			}
 		}
-		
+
 		this.objects[i].update();
 	}
 }
-
-
 /*
  * Notify event to all components
  */
@@ -115,83 +117,73 @@ motionEngine.prototype.pushEvent = function(event) {
 motionEngine.prototype.popEvent = function(event) {
 	this.eventQueue.splice(this.eventQueue.indexOf(event), 1);
 }
-
-
 /*
- * interseccion 
+ * interseccion
  */
-motionEngine.prototype.intersection = function(object1, object2){
+motionEngine.prototype.intersection = function(object1, object2) {
 	var response = 0;
-	
+
 	// Upper left corner
-	if( 
-		( object1.posX < (object2.posX+object2.width) ) && 
-		(object1.posY < (object2.posY+object2.height)) &&
-		(object1.posX >= object2.posX) && 
-		(object1.posY >= object2.posY) 
-			){
-		var sideSum4 = ((object2.posX+object2.width)-object1.posX);
-		var sideSum1 = ((object2.posY+object2.height)-object1.posY);
-		if( sideSum1 > sideSum4){
+	if((object1.posX < (object2.posX + object2.width) ) && (object1.posY < (object2.posY + object2.height)) && (object1.posX >= object2.posX) && (object1.posY >= object2.posY)) {
+		var sideSum4 = ((object2.posX + object2.width) - object1.posX);
+		var sideSum1 = ((object2.posY + object2.height) - object1.posY);
+		if(sideSum1 > sideSum4) {
 			response = 1;
-		}else{
+		} else {
 			response = 4;
 		}
 	}
-	
+
 	// Down left corner
-	if( 
-		( object1.posX < (object2.posX+object2.width) ) && 
-		(object1.posX >= object2.posX) && 
-		((object1.posY+object1.height) < (object2.posY+object2.height)) &&
-		((object1.posY+object1.height) >= object2.posY)
-			){
-		var sideSum2 = ((object2.posX+object2.width)-object1.posX);
-		var sideSum1 = ((object1.posY+object1.height)-object2.posY);
-		if( sideSum1 > sideSum2){
+	if((object1.posX < (object2.posX + object2.width) ) && (object1.posX >= object2.posX) && ((object1.posY + object1.height) < (object2.posY + object2.height)) && ((object1.posY + object1.height) >= object2.posY)) {
+		var sideSum2 = ((object2.posX + object2.width) - object1.posX);
+		var sideSum1 = ((object1.posY + object1.height) - object2.posY);
+		if(sideSum1 > sideSum2) {
 			response = 1;
-		}else{
+		} else {
 			response = 2;
 		}
 	}
-	
+
 	// Down right corner
-	if( 
-		((object1.posX+object1.width) < (object2.posX+object2.width) ) && 
-		((object1.posX+object1.width) > object2.posX) && 
-		((object1.posY+object1.height) < (object2.posY+object2.height)) &&
-		((object1.posY+object1.height) >= object2.posY)
-			){
-		var sideSum3 = ((object2.posX+object2.width)-object1.posX);
-		var sideSum2 = ((object2.posY+object2.height)-object1.posY);
-		if( sideSum2 > sideSum3){
+	if(((object1.posX + object1.width) < (object2.posX + object2.width) ) && ((object1.posX + object1.width) > object2.posX) && ((object1.posY + object1.height) < (object2.posY + object2.height)) && ((object1.posY + object1.height) >= object2.posY)) {
+		var sideSum3 = ((object2.posX + object2.width) - object1.posX);
+		var sideSum2 = ((object2.posY + object2.height) - object1.posY);
+		if(sideSum2 > sideSum3) {
 			response = 2;
-		}else{
+		} else {
 			response = 3;
 		}
 	}
-	
+
 	// Upper right corner
-	if( 
-		((object1.posX+object1.width) <= (object2.posX+object2.width) ) && 
-		((object1.posX+object1.width) >= object2.posX) && 
-		((object1.posY) <= (object2.posY+object2.height)) &&
-		((object1.posY) >= object2.posY)
-			){
-		var sideSum4 = ((object1.posX+object1.width)-object2.posX);
-		var sideSum3 = ((object2.posY+object2.height)-object1.posY);
-		if( sideSum3 > sideSum4){
+	if(((object1.posX + object1.width) <= (object2.posX + object2.width) ) && ((object1.posX + object1.width) >= object2.posX) && ((object1.posY) <= (object2.posY + object2.height)) && ((object1.posY) >= object2.posY)) {
+		var sideSum4 = ((object1.posX + object1.width) - object2.posX);
+		var sideSum3 = ((object2.posY + object2.height) - object1.posY);
+		if(sideSum3 > sideSum4) {
 			response = 3;
-		}else{
+		} else {
 			response = 4;
 		}
 	}
-	
+
 	return response;
 }
 
+motionEngine.prototype.clearQueue = function() {
+	var len = this.eventQueue.length;
+	var eventQueueTemp = [];
 
-motionEngine.prototype.getMapped = function (e) {
+	for( var i = 0; i < len; i++) {
+		var eventm = this.eventQueue[i];
+		if(eventm.isAlive) {
+			eventQueueTemp.push(eventm);
+		}
+	}
+	this.eventQueue = eventQueueTemp;
+}
+
+motionEngine.prototype.getMapped = function(e) {
 	switch(e) {
 		case 38:
 			return 'arrow-up';

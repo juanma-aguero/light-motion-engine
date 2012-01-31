@@ -1,5 +1,4 @@
 #container{
-	/*background: transparent url('../images/texture-asphalt.jpg') 0px 5px repeat-y;*/
     position: absolute;
     width: 708px;
     height: 570px;
@@ -13,18 +12,10 @@
 	position: relative;
 	z-index:3;
 	left: 0px;
-	border: 2px #1C86EE solid;
+	border: 2px #008000 solid;
+	background-color: #F2F5A9;
 }
 
-#loading-layer {
-	background-color: gray;
-	width: 708px;
-	height: 570px;
-	position: absolute;
-	z-index:4;
-	left: 0;
-	top: 0;
-}
 
 .header-layer{
 	opacity: 0.5;
@@ -37,7 +28,7 @@
 	font-family: arial;
 	padding-top: 0px;
 	text-align: center;
-	text-shadow: 0 0 4px white, 0 -5px 4px #87CEFA, 2px -10px 6px #007FFF, -2px -15px 11px #1C86EE, 2px -25px 18px #00008B;
+	text-shadow: 0 0 4px yellow, 0 -5px 4px green, 2px -10px 6px #007FFF, -2px -15px 11px brown, 2px -25px 18px blue;
 }
 
 .panel-left{
@@ -93,5 +84,5 @@
 }
 
 #right-side-panel span{
-	color: WHITE; float: left;font-size:25px;font-family:arial; margin-top: 5px; margin-left: 5px;
+	color: WHITE; float: left;font-family:arial; margin-top: 5px; margin-left: 5px;
 }

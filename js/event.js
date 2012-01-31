@@ -3,6 +3,9 @@ function event(type, params){
 	
 	this.type = type;
 	this.params = params;
+	
+	this.isAlive = true;
+	
 }
 
 
