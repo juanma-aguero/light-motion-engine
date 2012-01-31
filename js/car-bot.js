@@ -11,7 +11,7 @@ function carBot(id, initParams, addPointer, motionEngine, behaviour) {
 
 	// Object
 	this.id = id;
-	this.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+	this.color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
 
 	this.behaviour = behaviour;
 
@@ -54,6 +54,11 @@ carBot.prototype.update = function() {
 
 	this.processEvents();
 
+	this.counter++;
+
+	// thinking
+	this.think();
+
 	switch( this.state ) {
 		case 0:
 			this.defaultMovement();
@@ -69,27 +74,9 @@ carBot.prototype.defaultMovement = function() {
 
 	var angleForCalc = undefined;
 	var slippingTime = 2;
-	
-	this.counter++;
-
-	var maxSom = 500 + Math.floor(Math.random() * 2000);
-	if(this.counter > maxSom) {
-		this.activeAngle = Math.floor(Math.random() * 360);
-		this.vel = 0.4 + Math.floor(Math.random() * 3);
-		
-		this.motionEngine.addObject(new carBot(
-												this.motionEngine.objects.length+1,
-												this.initParams,
-												addPointer,
-												this.motionEngine,
-												this.behaviour));
-		
-		this.counter = 0;
-	}
 
 	// movement
 	angleForCalc = this.activeAngle;
-
 
 	var deltaPosY = (Math.sin(angleForCalc * (Math.PI / -180)) * this.vel);
 	var deltaPosX = (Math.cos(angleForCalc * (Math.PI / -180)) * this.vel);
@@ -105,23 +92,6 @@ carBot.prototype.crashMovement = function() {
 		this.posY = this.posY + (Math.sin(this.activeAngle * (Math.PI / -180)) * this.vel);
 		this.posX = this.posX + (Math.cos(this.activeAngle * (Math.PI / -180)) * this.vel);
 	}
-}
-/******/
-carBot.prototype.thereIsACrash = function() {
-	var intersectionsCount = 0;
-	for(var i = 0; i < this.circuit.borders.length; i++) {
-		intersectionsCount = this.intersection(this, this.circuit.borders[i]);
-		if(intersectionsCount > 0) {
-			break;
-		}
-	}
-	return intersectionsCount;
-}
-
-carBot.prototype.updateTilesetPosition = function() {
-	var pos = (this.activeAngle / 18);
-	this.spriteX = (pos * this.width);
-	this.spriteY = 0;
 }
 
 carBot.prototype.processEvents = function() {
@@ -193,4 +163,27 @@ carBot.prototype.manageCrash = function(eventm) {
 		this.lastAngle = this.activeAngle;
 
 	}
+}
+
+carBot.prototype.think = function() {
+
+	var haveChild = this.counter % 100;
+
+	if(haveChild == 0) {
+		//this.activeAngle = Math.floor(Math.random() * 360);
+		//sthis.motionEngine.addObject(new carBot(this.motionEngine.objects.length + 1, this.initParams, addPointer, this.motionEngine, this.behaviour));
+	}
+	
+	// aim to	
+	if( (this.counter % 50) == 0 ){
+		
+		var objectsInSight = this.motionEngine.giveMeWhatISee();
+		for(var i=0; i<objectsInSight.length; i++){
+			if(objectsInSight[i].followable){
+				//this.activeAngle = this.motionEngine.getAngleToFollow(this, objectsInSight[i]);	
+			}
+			
+		}
+	}
+
 }

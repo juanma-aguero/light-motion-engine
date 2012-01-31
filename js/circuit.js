@@ -15,9 +15,10 @@ function circuit(id){
 }
 
 circuit.prototype.build=function(){
-/*
+
 	////// BORDER - INTERNAL
 	//left
+	/*
 	for(var i=12; i<=32; i++){
 		this.borders.push(new border( i, 12, 'internal'));
 	}
@@ -25,10 +26,13 @@ circuit.prototype.build=function(){
 	for(var i=12; i<=32; i++){
 		this.borders.push(new border( i, 32, 'internal'));
 	}
+	*/
+	
 	//bottom
 	for(var i=13; i<=31; i++){
-		this.borders.push(new border( 32, i, 'internal'));
+		this.borders.push(new border( "border"+32+i, 32, i, 'internal'));
 	}
+	/*
 	//top
 	for(var i=13; i<=31; i++){
 		this.borders.push(new border( 12, i, 'internal'));

@@ -214,3 +214,24 @@ motionEngine.prototype.getMapped = function(e) {
 			break;
 	}
 }
+
+motionEngine.prototype.giveMeWhatISee = function(object){
+	var toReturn = [];
+	toReturn.push(this.objects[0]);
+	return toReturn;
+}
+
+motionEngine.prototype.getAngleToFollow = function(object, object2follow){
+	var equis = object2follow.posX-object.posX;
+	var hi = object2follow.posY-object.posY;
+
+	//equis = Math.sqrt( Math.pow(equis, 2) );
+	//hi = Math.sqrt( Math.pow(hi, 2) );
+	
+	var hipotenu = Math.sqrt(Math.pow(hi, 2) + Math.pow(equis, 2));
+
+	var radians = Math.asin(equis/hipotenu);
+	var ang = ( radians * (180 / Math.PI) );
+	
+	return ang;
+}

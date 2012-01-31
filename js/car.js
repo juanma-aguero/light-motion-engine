@@ -12,6 +12,7 @@ function car(id, iniX, iniY, addPointer, keyConf, motionEngine){
 	// Object
 	this.id = id;
 	this.color = "green";
+	this.followable = true;
 	
 	// Physics
 	this.vel = 0;
