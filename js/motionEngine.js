@@ -225,13 +225,29 @@ motionEngine.prototype.getAngleToFollow = function(object, object2follow){
 	var equis = object2follow.posX-object.posX;
 	var hi = object2follow.posY-object.posY;
 
-	//equis = Math.sqrt( Math.pow(equis, 2) );
-	//hi = Math.sqrt( Math.pow(hi, 2) );
+	// les saco el signo
+	unsignedEquis = Math.sqrt( Math.pow(equis, 2) );
+	unsignedHi = Math.sqrt( Math.pow(hi, 2) );
 	
-	var hipotenu = Math.sqrt(Math.pow(hi, 2) + Math.pow(equis, 2));
-
-	var radians = Math.asin(equis/hipotenu);
+	var hipotenu = Math.sqrt(Math.pow(unsignedHi, 2) + Math.pow(unsignedEquis, 2));
+	
+	var radians = Math.asin(unsignedHi/hipotenu);
 	var ang = ( radians * (180 / Math.PI) );
 	
-	return ang;
+	var d = 0;
+	
+	if( equis > 0 && hi > 0){
+		d = (270 + (90-ang));
+	}
+	if( equis > 0 && hi < 0){
+		d = ang;
+	}
+	if( equis < 0 && hi > 0){
+		d = (180+ang);
+	}
+	if( equis < 0 && hi < 0){
+		d = (90 + (180-ang));
+	}
+	
+	return d;
 }

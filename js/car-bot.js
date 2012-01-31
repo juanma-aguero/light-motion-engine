@@ -167,11 +167,11 @@ carBot.prototype.manageCrash = function(eventm) {
 
 carBot.prototype.think = function() {
 
-	var haveChild = this.counter % 100;
+	var haveChild = this.counter % 95;
 
 	if(haveChild == 0) {
 		//this.activeAngle = Math.floor(Math.random() * 360);
-		//sthis.motionEngine.addObject(new carBot(this.motionEngine.objects.length + 1, this.initParams, addPointer, this.motionEngine, this.behaviour));
+		//this.motionEngine.addObject(new carBot(this.motionEngine.objects.length + 1, this.initParams, addPointer, this.motionEngine, this.behaviour));
 	}
 	
 	// aim to	
@@ -180,7 +180,7 @@ carBot.prototype.think = function() {
 		var objectsInSight = this.motionEngine.giveMeWhatISee();
 		for(var i=0; i<objectsInSight.length; i++){
 			if(objectsInSight[i].followable){
-				//this.activeAngle = this.motionEngine.getAngleToFollow(this, objectsInSight[i]);	
+				this.activeAngle = this.motionEngine.getAngleToFollow(this, objectsInSight[i]);	
 			}
 			
 		}
