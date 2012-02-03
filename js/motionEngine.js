@@ -62,7 +62,9 @@ motionEngine.prototype.startLoop = function() {
 
 		// draw new objects
 		for(var i = 0; i < motionEngineInstance.objects.length; i++) {
-			motionEngineInstance.drawObject(motionEngineInstance.objects[i]);
+			if(motionEngineInstance.objects[i].isVisible){
+				motionEngineInstance.drawObject(motionEngineInstance.objects[i]);
+			}
 		}
 	}
 
@@ -215,9 +217,25 @@ motionEngine.prototype.getMapped = function(e) {
 	}
 }
 
+motionEngine.prototype.distanceBetween = function(object1, object2){
+	var x = object1.posX-object2.posX;
+	var y = object1.posY-object2.posY;
+	
+	var hyp = Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2));
+	
+	return hyp;
+}
+
 motionEngine.prototype.giveMeWhatISee = function(object){
 	var toReturn = [];
-	toReturn.push(this.objects[0]);
+	for(var i=0; i<this.objects.length; i++){
+		var distance = this.distanceBetween(object, this.objects[i]);
+		var ang = this.getAngleToFollow(object, this.objects[i]);
+		if( ang > (object.activeAngle-30) &&  ang < (object.activeAngle+30) && distance < 100){
+			toReturn.push(this.objects[i]);
+		}
+	}
+    //toReturn.push(this.objects[0]);
 	return toReturn;
 }
 

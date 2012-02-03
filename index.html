@@ -1,174 +1,60 @@
-<html>
-	<head>
-		<title>Incubadora - Alpha 1.20</title>
-		<link type="text/css" href="css/space-madness.css" rel="stylesheet" />
-		<link type="text/css" href="css/ui-darkness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />
-		<script type="application/javascript" src="js/jquery-1.5.1.min.js"></script>
-		<script type="application/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
-		<script type="application/javascript" src="js/jquery.spritely-0.5.js"></script>
-		<script type="application/javascript" src="js/car-bot.js"></script>
-		<script type="application/javascript" src="js/car.js"></script>
-		<script type="application/javascript" src="js/circuit.js"></script>
-		<script type="application/javascript" src="js/event.js"></script>
-		<script type="application/javascript" src="js/motionEngine.js"></script>
-		<script type="application/javascript" src="js/border.js"></script>
-		<script type="application/javascript">
-			// keyconfs
-			var keyConf1 = {
-				up : 'arrow-up',
-				down : 'arrow-down',
-				left : 'arrow-left',
-				right : 'arrow-right'
-			};
+<html itemscope itemtype="http://schema.org/WebPage"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8" >
+    <head>
+        <title>Incubadora - Alpha 1.20</title>
+        <link type="text/css" href="css/space-madness.css" rel="stylesheet" />
+        <link type="text/css" href="css/ui-darkness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />
+        <script type="application/javascript" src="js/jquery-1.5.1.min.js"></script>
+        <script type="application/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+        <script type="application/javascript" src="js/jquery.spritely-0.5.js"></script>
+        <script type="application/javascript" src="js/car-bot.js"></script>
+        <script type="application/javascript" src="js/car.js"></script>
+        <script type="application/javascript" src="js/circuit.js"></script>
+        <script type="application/javascript" src="js/event.js"></script>
+        <script type="application/javascript" src="js/motionEngine.js"></script>
+        <script type="application/javascript" src="js/border.js"></script>
+        <script type="application/javascript" src="js/ants.js"></script>
+    </head>
+    <body style="background-color: black; text-align:center;font-family: 'Bodoni MT Black';" >
+        <div style="width: 1015px; height: 570;margin-left: auto; margin-right: auto;">
+            <!-- left side panel -->
+            <div class="panel-left">
+                <button onclick="window.location = '../../index.html'" style="width: 100%;">Home</button>
+                <button onclick="window.location = 'ranking.php'" style="width: 100%;">Ranking</button>
+                <br/>
+                <div class="commands">
+                    <div style="font-weight: bold;">
+                        Key Commands
+                    </div>
+                    <div>
+                        <a style="float: left;">Movements</a><a style="float: right;">arrows</a>
+                    </div>
+                    <div>
+                        <a style="float: left;">Weapon fire</a><a style="float: right;">F</a>
+                    </div>
+                </div>
+            </div>
+            <!-- center side panel -->
+            <div style="float: left; margin-left: auto; margin-right: auto; width: 708px; height: 570; position: relative; left: 0;">
+                <div class="header-layer">Incubadora</div>
+                <div id="container"></div>
+                <canvas id="canvas-layer" width="708" height="570px"></canvas>
+            </div>
+            <!-- right side panel -->
+            <div id="right-side-panel" style="float: left; width: 150px; height: 570;">
+                <button onclick="startGame();return false;" style="width: 90%;">Comenzar</button>
+                <button onclick="pauseGame();return false;" style="width: 90%;">Pausa</button>
+                <button id="restartBtn" onclick="window.location = 'index.html'" style="width: 90%;">Refrescar</button>
 
-			var bot1Conf = {
-				"posX" : 200,
-				"posY" : 200,
-				"vel" : 1,
-				"color" : "blue",
-			};
-			var bot2Conf = {
-				"posX" : 300,
-				"posY" : 300,
-				"vel" : 2,
-				"color" : "red",
-			};
+                <span style="font-size: 25px">Angle:&nbsp;&nbsp;</span>
+                <span style="font-size: 25px" id="points">0</span>
+                <span style="font-size: 25px">Speed:&nbsp;</span>
+                <span style="font-size: 25px" id="vel">0</span>
 
-			var behaviour = {
-				"default" : "random",
-			};
-
-			function addPoints(angle, vel) {
-				updatePointsBoard(angle, vel);
-			}
-
-			var addPointer = addPoints;
-
-			var motionEngine = new motionEngine(addPointer);
-			var motionEngineRunning = false;
-			var motionEnginePaused = false;
-			var points = 0;
-
-			//***************************************
-			// Agrego objectos al motor de movimiento
-			motionEngine.addObject(new car(1, 450, 200, addPointer, keyConf1, motionEngine));
-			motionEngine.addObject(new carBot(2, bot1Conf, addPointer, motionEngine, behaviour));
-			motionEngine.addObject(new carBot(3, bot2Conf, addPointer, motionEngine, behaviour));
-
-			var circuit = new circuit("circuit" + 3);
-			motionEngine.addObject(circuit);
-
-			for(var i = 0; i < circuit.borders.length; i++) {
-				motionEngine.addObject(circuit.borders[i]);
-			}
-			//****************************************
-
-			$(document).ready(function() {
-				$("button").button();
-			});
-			function updatePointsBoard(points, vel) {
-				$("#points").text(points);
-				$("#vel").text(vel);
-			}
-
-			/** captura de eventos del teclado **/
-			$(document).keydown(function(e) {
-				if(motionEngineRunning) {
-					var mkey = motionEngine.getMapped(e.keyCode);
-					motionEngine.pushEvent(new event('keyboard', {
-						"keycode" : mkey
-					}));
-				}
-			});
-			$(document).keyup(function(e) {
-				if(motionEngineRunning) {
-					var mkey = motionEngine.getMapped(e.keyCode);
-					motionEngine.pushEvent(new event('keyboard', {
-						"keyup" : mkey
-					}));
-				}
-			});
-			function startGame() {
-				if(!motionEngineRunning) {
-					motionEngineRunning = true;
-					motionEngine.init();
-
-				} else {
-					motionEngine.startLoop();
-				}
-			}
-
-			function pauseGame() {
-				motionEngine.stop();
-			}
-
-			function motionEngineOver() {
-				$("#pointsToUser").html(points);
-				$("#game-over").dialog({
-					modal : true,
-					title : 'Game over',
-					buttons : {
-						"Ok" : function() {
-							rankUser();
-						}
-					}
-				});
-			}
-		</script>
-	</head>
-	<body style="background-color: black; text-align:center;font-family: "Bodoni MT Black";" >
-		<div style="width: 1015px; height: 570;margin-left: auto; margin-right: auto;">
-			<!-- left side panel -->
-			<div class="panel-left">
-				<button onclick="window.location = '../../index.html'" style="width: 100%;">
-					Home
-				</button>
-				<button onclick="window.location = 'ranking.php'" style="width: 100%;">
-					Ranking
-				</button>
-				<br/>
-				<div class="commands">
-					<div style="font-weight: bold;">
-						Key Commands
-					</div>
-					<div>
-						<a style="float: left;">Movements</a><a style="float: right;">arrows</a>
-					</div>
-					<div>
-						<a style="float: left;">Weapon fire</a><a style="float: right;">F</a>
-					</div>
-				</div>
-			</div>
-			<!-- center side panel -->
-			<div style="float: left; margin-left: auto; margin-right: auto; width: 708px; height: 570; position: relative; left: 0;">
-				<div class="header-layer">
-					Incubadora
-				</div>
-				<div id="container"></div>
-				<canvas id="canvas-layer" width="708" height="570px"></canvas>
-			</div>
-			<!-- right side panel -->
-			<div id="right-side-panel" style="float: left; width: 150px; height: 570;">
-				<button onclick="startGame();return false;" style="width: 90%;">
-					Comenzar
-				</button>
-				<button onclick="pauseGame();return false;" style="width: 90%;">
-					Pausa
-				</button>
-				<button id="restartBtn" onclick="window.location = 'index.html'" style="width: 90%;">
-					Refrescar
-				</button>
-				
-				<span style="font-size: 25px">Angle:&nbsp;&nbsp;</span>
-				<span style="font-size: 25px" id="points">0</span>
-				<span style="font-size: 25px">Speed:&nbsp;</span>
-				<span style="font-size: 25px" id="vel">0</span>
-				
-			</div>
-		</div>
-		<br/>
-		<div style="width: 100%;color: white;">
-			By Juan Manuel Ag�ero - 2011
-		</div>
-	</body>
+            </div>
+        </div>
+        <br/>
+        <div style="width: 100%;color: white;">
+			By Juan Manuel Agüero - 2011
+        </div>
+    </body>
 </html>

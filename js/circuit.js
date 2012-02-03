@@ -1,6 +1,7 @@
 /** Rect*/
 function circuit(id){
 	this.id = id;
+	this.isVisible = false;
 	this.width=800;
 	this.height=800;
 	this.state = 0;
