@@ -5,6 +5,7 @@ function border(id, x0, y0, type){
 	
 	this.id = id;
 	this.isVisible = true;
+	this.canRotate = false;
 	this.type = type;
 
 	this.width=12;

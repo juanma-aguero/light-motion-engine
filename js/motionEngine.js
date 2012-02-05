@@ -25,15 +25,19 @@ motionEngine.prototype.addObject = function(object) {
  * Draw objects on canvas
  */
 motionEngine.prototype.drawObject = function(object) {
-	this.ctx.fillStyle = object.color;
-	this.ctx.fillRect(object.posX, object.posY, object.width, object.height)
+		this.ctx.save();
+		this.ctx.translate(object.posX, object.posY);
+		this.ctx.rotate((-object.activeAngle) * Math.PI/180);
+		this.ctx.fillStyle = object.color;
+		this.ctx.fillRect(-(object.width/2), -(object.height/2), object.width, object.height);
+		this.ctx.restore();
 }
 /*
  * Delete objects on canvas
  */
 motionEngine.prototype.clearScreen = function(object) {
 	//this.ctx.clearRect(object.posX, object.posY, object.width, object.height);
-	this.ctx.clearRect(0, 0, 600, 600);
+	this.ctx.clearRect(0, 0, 700, 700);
 }
 /*
  * Init motionEngine functionalitys

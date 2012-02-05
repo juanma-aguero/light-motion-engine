@@ -14,6 +14,7 @@ function car(id, iniX, iniY, addPointer, keyConf, motionEngine){
 	this.isVisible = true;
 	this.color = "green";
 	this.followable = true;
+	this.canRotate = true;
 	
 	// Physics
 	this.vel = 0;

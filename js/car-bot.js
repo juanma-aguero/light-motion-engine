@@ -12,6 +12,7 @@ function carBot(id, initParams, addPointer, motionEngine, behaviour) {
     // Object
     this.id = id;
     this.isVisible = true;
+    this.canRotate = true;
     this.color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
     this.behaviour = behaviour;
 
