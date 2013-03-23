@@ -38,7 +38,8 @@ function carBot(id, initParams, addPointer, motionEngine, behaviour) {
     // Renderization
     this.spriteX = (5 * this.width);
     this.spriteY = 0;
-    this.img = "car";
+    this.img = new Image();
+        this.img.src = "images/wheel.png";
     this.isSprited = true;
 
     this.state = 0;

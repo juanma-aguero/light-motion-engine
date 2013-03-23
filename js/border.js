@@ -15,6 +15,9 @@ function border(id, x0, y0, type){
 	this.posY=(y0*13);
 	
 	this.intersectable = true;
+        
+        this.img = new Image();
+        this.img.src = "images/wheel.png";
 
 	this.state = 0;
 

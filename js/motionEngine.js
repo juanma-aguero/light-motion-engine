@@ -28,8 +28,9 @@ motionEngine.prototype.drawObject = function(object) {
 		this.ctx.save();
 		this.ctx.translate(object.posX, object.posY);
 		this.ctx.rotate((-object.activeAngle) * Math.PI/180);
-		this.ctx.fillStyle = object.color;
-		this.ctx.fillRect(-(object.width/2), -(object.height/2), object.width, object.height);
+//		this.ctx.fillStyle = object.color;
+//		this.ctx.fillRect(-(object.width/2), -(object.height/2), object.width, object.height);
+                this.ctx.drawImage(object.img, -(object.width/2), -(object.height/2), object.width, object.height);
 		this.ctx.restore();
 }
 /*
@@ -100,10 +101,12 @@ motionEngine.prototype.update = function() {
 				if(thereIsACrash > 0) {
 					this.pushEvent(new event("crash", {
 						"id" : this.objects[i].id,
+						"object" : this.objects[j],
 						"type" : thereIsACrash
 					}));
 					this.pushEvent(new event("crash", {
 						"id" : this.objects[j].id,
+                                                "object" : this.objects[i],
 						"type" : thereIsACrash
 					}));
 				}
@@ -214,6 +217,9 @@ motionEngine.prototype.getMapped = function(e) {
 			break;
 		case 68:
 			return 'key-d';
+			break;
+		case 70:
+			return 'key-fire';
 			break;
 		default:
 			return 'unknown';

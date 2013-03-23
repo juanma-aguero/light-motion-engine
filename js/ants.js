@@ -3,7 +3,8 @@ var keyConf1 = {
     up : 'arrow-up',
     down : 'arrow-down',
     left : 'arrow-left',
-    right : 'arrow-right'
+    right : 'arrow-right',
+    fire : 'key-fire'
 };
 
 var bot1Conf = {

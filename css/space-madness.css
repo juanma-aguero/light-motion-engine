@@ -3,86 +3,87 @@
     width: 708px;
     height: 570px;
     overflow: hidden;
-	z-index:2;
+    z-index:2;
 }
 
 #canvas-layer {
-	width: 708px;
-	height: 570px;
-	position: relative;
-	z-index:3;
-	left: 0px;
-	border: 2px #008000 solid;
-	background-color: #F2F5A9;
+    width: 708px;
+    height: 570px;
+    position: relative;
+    z-index:3;
+    left: 0px;
+    border: 2px #008000 solid;
+    background-color: #F2F5A9;
+    background-image: url('../images/map-view.jpg');
 }
 
 
 .header-layer{
-	opacity: 0.5;
-	width: 100%;
-	left: 0px;
-	position: absolute;
-	z-index: 5;
-	color: #EEE;
-	font-size: 55px;
-	font-family: arial;
-	padding-top: 0px;
-	text-align: center;
-	text-shadow: 0 0 4px yellow, 0 -5px 4px green, 2px -10px 6px #007FFF, -2px -15px 11px brown, 2px -25px 18px blue;
+    opacity: 0.5;
+    width: 100%;
+    left: 0px;
+    position: absolute;
+    z-index: 5;
+    color: #EEE;
+    font-size: 55px;
+    font-family: arial;
+    padding-top: 0px;
+    text-align: center;
+    text-shadow: 0 0 4px yellow, 0 -5px 4px green, 2px -10px 6px #007FFF, -2px -15px 11px brown, 2px -25px 18px blue;
 }
 
 .panel-left{
-	float: left;
-	width: 150px;
-	height: 570px;
-	position: relative;
-	left: 0px;
+    float: left;
+    width: 150px;
+    height: 570px;
+    position: relative;
+    left: 0px;
 }
 
 .panel-center{
 }
 
 .commands{
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	background-color: #EEE;
-	-moz-box-shadow: 8px 8px 5px #888;
-	-webkit-box-shadow: 5px 5px 5px #888;
-	box-shadow: 5px 5px 5px #888;
-	width: 98%;
-	float:left;
-	border: 1px solid gray;
-	font-size: 12px;
-	font-color: #888;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #EEE;
+    -moz-box-shadow: 8px 8px 5px #888;
+    -webkit-box-shadow: 5px 5px 5px #888;
+    box-shadow: 5px 5px 5px #888;
+    width: 98%;
+    float:left;
+    border: 1px solid gray;
+    font-size: 12px;
+    font-color: #888;
 }
 
 
 .ranking-list{
-	/*border: 1px solid white;*/
-	margin-top: 100px;
-	color: white;
-	width: 708px;
-	height: 470px;
-	position: relative;
-	z-index:3;
-	left: 0px;
-	top: 0px;
-	overflow: hidden;
+    /*border: 1px solid white;*/
+    margin-top: 100px;
+    color: white;
+    width: 708px;
+    height: 470px;
+    position: relative;
+    z-index:3;
+    left: 0px;
+    top: 0px;
+    overflow: hidden;
 }
 
 .ranking-list .row{
-	/*border: 1px solid white;*/
-	padding: 15px;
+    /*border: 1px solid white;*/
+    padding: 15px;
 }
 
 .ranking-list div span{
-	font-weight: bold;
-	font-family: verdana;
-	color: #00FF00;
-	padding-left: 10px;
-	text-shadow: 0 0 4px white, 0 -5px 4px #87CEFA, 2px -10px 6px #007FFF, -2px -15px 11px #1C86EE, 2px -25px 18px #00008B;
+    font-weight: bold;
+    font-family: verdana;
+    color: #00FF00;
+    padding-left: 10px;
+    text-shadow: 0 0 4px white, 0 -5px 4px #87CEFA, 2px -10px 6px #007FFF, -2px -15px 11px #1C86EE, 2px -25px 18px #00008B;
 }
 
 #right-side-panel span{
-	color: WHITE; float: left;font-family:arial; margin-top: 5px; margin-left: 5px;
+    color: WHITE; float: left;font-family:arial; margin-top: 5px; margin-left: 5px;
 }
